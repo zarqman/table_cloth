@@ -34,7 +34,16 @@ module TableCloth
         column_class = options.delete(:using) || Column
 
         args.each do |name|
-          add_column(class: column_class, options: options, name: name)
+          add_column(name, class: column_class, options: options, name: name)
+        end
+      end
+
+      def label(*args, &block)
+        options = args.extract_options! || {}
+        options[:label] = block_given? ? block : args.pop
+
+        args.each do |name|
+          add_column(name, options: options)
         end
       end
 
@@ -47,9 +56,10 @@ module TableCloth
         @columns
       end
 
-      def add_column(options)
+      def add_column(name, options)
         @columns ||= {}
-        @columns[options[:name]] = options
+        @columns[name] ||= {}
+        @columns[name].deep_merge! options
       end
 
       def config

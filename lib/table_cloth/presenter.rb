@@ -1,23 +1,24 @@
 module TableCloth
   class Presenter
-    attr_reader :view_context, :objects, :table
+    attr_reader :view_context, :objects, :table, :render_options
 
-    def initialize(objects, table, view)
+    def initialize(objects, table, view, render_options={})
       @objects = objects
       @view_context = view
       @table = table.new(objects, view)
+      @render_options = render_options
     end
 
     def render_table
-      raise NoMethodError, "You must override the .render method"
+      raise NoMethodError, "You must override the .render_table method"
     end
 
     def thead
-      raise NoMethodError, "You must override the .header method"
+      raise NoMethodError, "You must override the .thead method"
     end
 
     def tbody
-      raise NoMethodError, "You must override the .rows method"
+      raise NoMethodError, "You must override the .tbody method"
     end
 
     def columns

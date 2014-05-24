@@ -26,8 +26,22 @@ module TableCloth
         @thead_row ||= ElementFactory::Element.new(:tr, tag_options(:tr)).tap do |row|
           columns.each do |column|
             th_options = column.options[:th_options] || {}
-            name = column.human_name(view_context)
-            row << ElementFactory::Element.new(:th, tag_options(:th, th_options).merge(text: name))
+            value = column.human_name(render_options, view_context)
+
+            if value.is_a?(Array)
+              options = value.pop
+              value   = value.shift
+
+              th_options.update(options)
+            end
+
+            if value.html_safe?
+              th_options[:inner_html] = value
+            else
+              th_options[:text] = value
+            end
+
+            row << ElementFactory::Element.new(:th, tag_options(:th).merge(th_options))
           end
         end
       end
