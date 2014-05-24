@@ -21,6 +21,10 @@ module TableCloth
       raise NoMethodError, "You must override the .tbody method"
     end
 
+    def tfoot
+      raise NoMethodError, "You must override the .tfoot method"
+    end
+
     def columns
       @columns ||= table.class.columns.map do |name, column_hash|
         column = column_hash[:class].new(name, column_hash[:options])

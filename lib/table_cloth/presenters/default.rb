@@ -5,6 +5,7 @@ module TableCloth
         @render_table ||= ElementFactory::Element.new(:table, tag_options(:table)).tap do |table|
           table << thead
           table << tbody
+          table << tfoot
         end
       end
 
@@ -17,6 +18,20 @@ module TableCloth
       def tbody
         @tbody ||= ElementFactory::Element.new(:tbody, tag_options(:tbody)).tap do |tbody|
           objects.each {|object| tbody << row_for_object(object) }
+        end
+      end
+
+      def tfoot
+        @tfoot ||= begin
+          values = columns.map do |column|
+            value = column.footer(objects, view_context)
+            [column, value]
+          end
+          ElementFactory::Element.new(:tfoot, tag_options(:tfoot)).tap do |tfoot|
+            if values.map(&:second).compact.any?
+              tfoot << tfoot_row(values)
+            end
+          end
         end
       end
 
@@ -42,6 +57,30 @@ module TableCloth
             end
 
             row << ElementFactory::Element.new(:th, tag_options(:th).merge(th_options))
+          end
+        end
+      end
+
+      def tfoot_row(values)
+        @tfoot_row ||= ElementFactory::Element.new(:tr, tag_options(:tr)).tap do |row|
+          values.each do |column, value|
+            td_options = column.options[:td_options] || {}
+            value ||= ''
+
+            if value.is_a?(Array)
+              options = value.pop
+              value   = value.shift
+
+              td_options.update(options)
+            end
+
+            if value.html_safe?
+              td_options[:inner_html] = value
+            else
+              td_options[:text] = value
+            end
+
+            row << ElementFactory::Element.new(:td, tag_options(:td).merge(td_options))
           end
         end
       end

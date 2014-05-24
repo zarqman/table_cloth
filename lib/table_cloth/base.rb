@@ -47,6 +47,15 @@ module TableCloth
         end
       end
 
+      def footer(*args, &block)
+        options = args.extract_options! || {}
+        options[:footer] = block_given? ? block : args.pop
+
+        args.each do |name|
+          add_column(name, options: options)
+        end
+      end
+
       def columns
         @columns ||= {}
         if superclass.respond_to? :columns

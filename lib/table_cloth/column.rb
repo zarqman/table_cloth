@@ -22,5 +22,13 @@ module TableCloth
         options[:label] || name.to_s.humanize
       end
     end
+
+    def footer(objects, view)
+      if options[:footer].kind_of? Proc
+        view.instance_exec(objects, view, &options[:footer])
+      else
+        options[:footer]
+      end
+    end
   end
 end
