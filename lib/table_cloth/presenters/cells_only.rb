@@ -4,9 +4,7 @@ module TableCloth
 
       def render_table
         @render_table ||= begin
-          o = ''.html_safe
-          objects.each {|object| o << row_for_object(object) }
-          o
+          (objects.map {|object| row_for_object(object) }.join).html_safe
         end
       end
 

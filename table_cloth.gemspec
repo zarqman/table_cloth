@@ -27,6 +27,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency('rake')
   gem.add_development_dependency('rb-fsevent', '~> 0.9.4')
 
-  gem.add_dependency('actionpack', '>= 3.1', '< 4.2')
+  gem.add_dependency('actionpack', '>= 4.0', '< 5.0')
   gem.add_dependency('element_factory', '~> 0.1.2')
 end
